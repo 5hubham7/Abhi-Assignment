@@ -1,15 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { SearchService } from '../search.service';
 
 @Component({
   selector: 'app-result',
   templateUrl: './result.component.html',
-  styleUrls: ['./result.component.css']
+  styleUrls: ['./result.component.css'],
 })
 export class ResultComponent implements OnInit {
+  searchData: any;
+  subscription: Subscription;
 
-  constructor() { }
+  constructor(private searchService: SearchService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.subscription = this.searchService.currentSearchData.subscribe(
+      (searchData) => (this.searchData = searchData)
+    );
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
